@@ -18,24 +18,14 @@ export class ResponseInterceptor implements NestInterceptor {
   ): Observable<any> | Promise<Observable<any>> {
     return next.handle().pipe(
       map((data) => {
-        if (data?.data || data?.message) {
-          return {
-            status: true,
-            message: data.message,
-            data: plainToInstance(this.vm, data.data, {
-              excludeExtraneousValues: true,
-              enableImplicitConversion: true,
-            }),
-          };
-        } else {
-          return {
-            status: true,
-            data: plainToInstance(this.vm, data, {
-              excludeExtraneousValues: true,
-              enableImplicitConversion: true,
-            }),
-          };
-        }
+        return {
+          status: true,
+          ...(data?.message && { message: data.message }),
+          data: plainToInstance(this.vm, data?.data ?? data, {
+            excludeExtraneousValues: true,
+            enableImplicitConversion: true,
+          }),
+        };
       }),
     );
   }

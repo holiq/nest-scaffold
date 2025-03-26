@@ -22,7 +22,6 @@ export class ResponsePaginationInterceptor implements NestInterceptor {
     return next.handle().pipe(
       map((data) => {
         let response: Record<string, any> = {};
-        const message = data?.message;
 
         if (data['rows'] !== undefined && data['count'] !== undefined) {
           const page =
@@ -54,7 +53,7 @@ export class ResponsePaginationInterceptor implements NestInterceptor {
 
         return {
           status: true,
-          message: message ?? undefined,
+          ...(data?.message && { message: data.message }),
           ...response,
         };
       }),
