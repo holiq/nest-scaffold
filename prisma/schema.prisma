@@ -1,0 +1,111 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [pgcrypto]
+}
+
+model AuditLog {
+  id         Int      @id @default(autoincrement())
+  userId     String?  @map("user_id")
+  userEmail  String?  @map("user_email")
+  request    String?  @map("request") @db.Text
+  exceptions String?  @map("exceptions") @db.Text
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@map("audit_logs")
+}
+
+model UserLoginInfo {
+  id        Int      @id @default(autoincrement())
+  userId    String?  @map("user_id")
+  userEmail String?  @map("user_email")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("user_login_info")
+}
+
+model User {
+  id            String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  fullname      String
+  username      String          @unique
+  email         String          @unique
+  password      String
+  createdAt     DateTime        @default(now()) @map("created_at")
+  updatedAt     DateTime?       @updatedAt @map("updated_at")
+  deletedAt     DateTime?       @map("deleted_at")
+  pivotUserRole PivotUserRole[]
+
+  @@map("users")
+}
+
+model Role {
+  id                  Int                   @id @default(autoincrement())
+  displayName         String                @map("display_name")
+  name                String
+  createdAt           DateTime              @default(now()) @map("created_at")
+  updatedAt           DateTime?             @updatedAt @map("updated_at")
+  deletedAt           DateTime?             @map("deleted_at")
+  permissions         Permission[]
+  pivotRolePermission PivotRolePermission[]
+  pivotUserRole       PivotUserRole[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id                  Int                   @id @default(autoincrement())
+  displayName         String                @map("display_name")
+  name                String
+  createdAt           DateTime              @default(now()) @map("created_at")
+  updatedAt           DateTime?             @updatedAt @map("updated_at")
+  deletedAt           DateTime?             @map("deleted_at")
+  roles               Role[]
+  pivotRolePermission PivotRolePermission[]
+
+  @@map("permissions")
+}
+
+model Job {
+  id            Int       @id @default(autoincrement())
+  jobId         String    @map("job_id")
+  jobStatus     String    @map("job_status")
+  jobPayload    Json?     @map("job_payload")
+  jobExceptions Json?     @map("job_exceptions")
+  completedAt   DateTime? @map("completed_at")
+  createdAt     DateTime  @default(now()) @map("created_at")
+
+  @@map("jobs")
+}
+
+model PivotUserRole {
+  userId String @db.Uuid
+  roleId Int
+
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role Role? @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+  @@map("pivot_user_role")
+}
+
+model PivotRolePermission {
+  roleId       Int
+  permissionId Int
+
+  role       Role?       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission? @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@map("pivot_role_permission")
+}

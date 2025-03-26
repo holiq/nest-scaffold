@@ -1,0 +1,17 @@
+npm-debug.log
+manifests
+Dockerfile*
+docker-compose*
+.dockerignore
+Jenkinsfile
+.editorconfig
+.git
+.gitignore
+.gitattributes
+README.md
+LICENSE
+.vscode
+.env.example
+vault-ca
+vault-client-secret
+script

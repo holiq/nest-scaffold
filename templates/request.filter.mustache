@@ -1,0 +1,26 @@
+import { Prisma } from '@prisma/client';
+import { BaseFilter } from '@utils/base-class/base-filter';
+
+export class FILTER_NAME extends BaseFilter<
+  Prisma.MODELNAME_WhereInput,
+  Prisma.MODELNAME_FindManyArgs
+> {
+  constructor(
+    filter: Prisma.MODELNAME_FindManyArgs,
+    query: QUERY_REQUEST,
+  ) {
+    super(filter);
+
+    if (query.search) {
+      this.search(query.search);
+    }
+  }
+
+  search(search: string) {
+    this.where = {
+      ...this.where,
+    };
+
+    return this;
+  }
+}
