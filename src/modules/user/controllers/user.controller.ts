@@ -5,7 +5,10 @@ import { UserService } from '@services/user.service';
 import { UserVm } from '@viewmodels/user.viewmodel';
 import { SerializeResponse } from '@utils/decorators/response/serialize-response.decorator';
 import { UserAccess } from '@utils/decorators/user-access.decorator';
-import { AuthenticatedUser } from '@utils/decorators/authenticate-user.decorator';
+import {
+  AuthenticatedAdmin,
+  AuthenticatedUser,
+} from '@utils/decorators/authenticate-user.decorator';
 import { PrismaFilter } from '@utils/decorators/base-filter.decorator';
 import { FilterSearchUser } from '@requests/user.request';
 
@@ -17,6 +20,7 @@ export class UserController {
 
   @ApiOperation({ summary: 'Get all users' })
   @SerializeResponse(UserVm, 'pagination')
+  @AuthenticatedAdmin()
   @Get()
   async findAll(
     @PrismaFilter() filter: Prisma.UserFindManyArgs,
