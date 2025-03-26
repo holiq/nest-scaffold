@@ -1,5 +1,5 @@
 import { Reflector } from '@nestjs/core';
-import { Type, UseInterceptors, applyDecorators } from '@nestjs/common';
+import { applyDecorators, Type, UseInterceptors } from '@nestjs/common';
 import { ApiExtraModels, ApiOkResponse, getSchemaPath } from '@nestjs/swagger';
 import { ResponsePaginationInterceptor } from '@utils/interceptors/response/response-pagination.interceptor';
 import { ResponseInterceptor } from '@utils/interceptors/response/response.interceptor';
@@ -23,6 +23,7 @@ export function SerializeResponse(vm: Type<unknown>, type?: ResponseType) {
                 {
                   properties: {
                     status: { type: 'boolean' },
+                    message: { type: 'string' },
                     data: {
                       type: 'array',
                       items: { $ref: getSchemaPath(vm) },
@@ -50,6 +51,7 @@ export function SerializeResponse(vm: Type<unknown>, type?: ResponseType) {
                 {
                   properties: {
                     status: { type: 'boolean' },
+                    message: { type: 'string' },
                     data: isArray
                       ? {
                           type: 'array',

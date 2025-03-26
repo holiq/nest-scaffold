@@ -1,8 +1,8 @@
 import {
+  CallHandler,
+  ExecutionContext,
   Injectable,
   NestInterceptor,
-  ExecutionContext,
-  CallHandler,
   Type,
 } from '@nestjs/common';
 import { map, Observable } from 'rxjs';
@@ -21,22 +21,21 @@ export class ResponsePaginationInterceptor implements NestInterceptor {
 
     return next.handle().pipe(
       map((data) => {
-        let response = {};
+        let response: Record<string, any> = {};
+        const message = data?.message;
 
         if (data['rows'] !== undefined && data['count'] !== undefined) {
           const page =
             query?.page && query?.page > 0 ? parseInt(query.page) : 1;
           const limit = query?.limit ? parseInt(query.limit) : 10;
 
-          const rows = data.rows.map((row) => {
-            return plainToInstance(this.vm, row, {
-              excludeExtraneousValues: true,
-              enableImplicitConversion: true,
-            });
-          });
-
           response = {
-            data: rows,
+            data: data.rows.map((row) =>
+              plainToInstance(this.vm, row, {
+                excludeExtraneousValues: true,
+                enableImplicitConversion: true,
+              }),
+            ),
             meta: {
               currentPage: page,
               perPage: limit,
@@ -46,12 +45,16 @@ export class ResponsePaginationInterceptor implements NestInterceptor {
           };
         } else {
           response = {
-            data: data,
+            data: plainToInstance(this.vm, data?.data ?? data, {
+              excludeExtraneousValues: true,
+              enableImplicitConversion: true,
+            }),
           };
         }
 
         return {
           status: true,
+          message: message ?? undefined,
           ...response,
         };
       }),
