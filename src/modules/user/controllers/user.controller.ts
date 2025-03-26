@@ -19,7 +19,7 @@ export class UserController {
   constructor(private readonly service: UserService) {}
 
   @ApiOperation({ summary: 'Get all users' })
-  @SerializeResponse(UserVm, 'pagination')
+  @SerializeResponse({ vm: UserVm, type: 'pagination', hasMessage: true })
   @AuthenticatedAdmin()
   @Get()
   async findAll(
@@ -30,7 +30,7 @@ export class UserController {
   }
 
   @ApiOperation({ summary: 'Get my profile' })
-  @SerializeResponse(UserVm)
+  @SerializeResponse({ vm: UserVm })
   @Get('profile')
   async profile(@UserAccess() user: User) {
     return user;

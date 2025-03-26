@@ -7,7 +7,12 @@ import { ApiPrismaFilter } from '@utils/decorators/base-filter.decorator';
 
 type ResponseType = 'pagination' | 'default';
 
-export function SerializeResponse(vm: Type<unknown>, type?: ResponseType) {
+export function SerializeResponse(options: {
+  vm: Type<unknown>;
+  type?: ResponseType;
+  hasMessage?: boolean;
+}) {
+  const { vm, type, hasMessage } = options;
   const reflector = new Reflector();
   const isArray = reflector.get<boolean>('ApiReturnArray', vm) || false;
 
@@ -23,7 +28,7 @@ export function SerializeResponse(vm: Type<unknown>, type?: ResponseType) {
                 {
                   properties: {
                     status: { type: 'boolean' },
-                    message: { type: 'string' },
+                    ...(hasMessage ? { message: { type: 'string' } } : {}),
                     data: {
                       type: 'array',
                       items: { $ref: getSchemaPath(vm) },
@@ -51,7 +56,7 @@ export function SerializeResponse(vm: Type<unknown>, type?: ResponseType) {
                 {
                   properties: {
                     status: { type: 'boolean' },
-                    message: { type: 'string' },
+                    ...(hasMessage ? { message: { type: 'string' } } : {}),
                     data: isArray
                       ? {
                           type: 'array',

@@ -11,14 +11,14 @@ export class AuthController {
   constructor(private readonly service: AuthService) {}
 
   @ApiOperation({ summary: 'Login' })
-  @SerializeResponse(AuthLoginVm)
+  @SerializeResponse({ vm: AuthLoginVm })
   @Post('login')
   async login(@Body() body: AuthLoginRequest) {
     return await this.service.login(body);
   }
 
   @ApiOperation({ summary: 'Register' })
-  @SerializeResponse(AuthRegisterVm)
+  @SerializeResponse({ vm: AuthRegisterVm })
   @Post('register')
   async register(@Body() body: AuthRegisterRequest) {
     return await this.service.register(body);
