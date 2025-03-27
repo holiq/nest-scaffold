@@ -31,4 +31,10 @@ export class BaseFilter<T, K extends IFilter> {
       this.take = 10;
     }
   }
+
+  getEndOfDay(date: string): Date {
+    const endDate = new Date(date);
+    endDate.setHours(23, 59, 59, 999);
+    return endDate;
+  }
 }

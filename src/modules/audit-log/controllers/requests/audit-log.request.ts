@@ -1,7 +1,7 @@
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export class CreateAuditLogRequest {
-  @IsNumber()
+  @IsString()
   @IsOptional()
   userId?: string;
 
@@ -16,4 +16,18 @@ export class CreateAuditLogRequest {
   @IsString()
   @IsOptional()
   exceptions?: string;
+}
+
+export class SearchAuditLogRequest {
+  @IsString()
+  @IsOptional()
+  search?: string;
+
+  @IsString()
+  @IsOptional()
+  startDate?: string;
+
+  @IsString()
+  @IsOptional()
+  endDate?: string;
 }
