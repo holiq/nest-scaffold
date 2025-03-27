@@ -2,9 +2,7 @@ import { PrismaClient, Role } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export async function seedRole() {
-  // Write migration here...
-
+export async function seedRole(): Promise<void> {
   const data = <Role[]>[
     {
       displayName: 'User',
@@ -17,7 +15,7 @@ export async function seedRole() {
   ];
 
   for (const row of data) {
-    const item = await prisma.role.findFirst({
+    const item: Role = await prisma.role.findFirst({
       where: { name: row.name },
     });
 

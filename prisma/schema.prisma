@@ -50,7 +50,7 @@ model User {
 }
 
 model Role {
-  id                  Int                   @id @default(autoincrement())
+  id                  String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   displayName         String                @map("display_name")
   name                String
   createdAt           DateTime              @default(now()) @map("created_at")
@@ -64,7 +64,7 @@ model Role {
 }
 
 model Permission {
-  id                  Int                   @id @default(autoincrement())
+  id                  String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   displayName         String                @map("display_name")
   name                String
   createdAt           DateTime              @default(now()) @map("created_at")
@@ -90,7 +90,7 @@ model Job {
 
 model PivotUserRole {
   userId String @db.Uuid
-  roleId Int
+  roleId String @db.Uuid
 
   user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
   role Role? @relation(fields: [roleId], references: [id], onDelete: Cascade)
@@ -100,8 +100,8 @@ model PivotUserRole {
 }
 
 model PivotRolePermission {
-  roleId       Int
-  permissionId Int
+  roleId       String @db.Uuid
+  permissionId String @db.Uuid
 
   role       Role?       @relation(fields: [roleId], references: [id], onDelete: Cascade)
   permission Permission? @relation(fields: [permissionId], references: [id], onDelete: Cascade)
