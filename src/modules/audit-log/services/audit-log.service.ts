@@ -15,18 +15,12 @@ export class AuditLogService {
     filter: Prisma.AuditLogFindManyArgs,
     query: SearchAuditLogRequest,
   ): Promise<{ message: string; rows: AuditLog[]; count: number }> {
-    const [data, count] = await Promise.all([
+    const [rows, count] = await Promise.all([
       this.prisma.auditLog.findMany({
         ...new AuditLogFilter(filter, query),
       }),
       this.prisma.auditLog.count(),
     ]);
-
-    const rows = data.map((auditLog) => ({
-      ...auditLog,
-      request: JSON.parse(auditLog.request),
-      exceptions: JSON.parse(auditLog.exceptions),
-    }));
 
     return { message: 'Get all audit logs', rows, count };
   }

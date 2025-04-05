@@ -1,3 +1,4 @@
+import { TransformJson } from '@utils/decorators/transform-json.decorator';
 import { Expose } from 'class-transformer';
 
 export class AuditLogVm {
@@ -11,10 +12,12 @@ export class AuditLogVm {
   userEmail: string;
 
   @Expose()
-  request: Record<string, any>;
+  @TransformJson()
+  request: Record<string, object>;
 
   @Expose()
-  exceptions: Record<string, any>;
+  @TransformJson()
+  exceptions: Record<string, object>;
 
   @Expose()
   createdAt: Date;
