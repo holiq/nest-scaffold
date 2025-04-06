@@ -24,6 +24,7 @@
         "src/modules/auth/services/*",
         "src/modules/audit-log/services/*",
         "src/modules/common/circuit-breaker/services/*",
+        "src/modules/common/upload/services/*"
       ],
       "@requests/*": [
         "src/modules/user/controllers/requests/*",
@@ -40,6 +41,7 @@
         "src/modules/user/*",
         "src/modules/auth/*",
         "src/modules/common/circuit-breaker/*",
+        "src/modules/common/upload/*",
         "src/modules/audit-log/*",
         "src/modules/config/queue/*",
       ],
