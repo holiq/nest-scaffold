@@ -6,6 +6,8 @@ import { QueueModule } from '@modules/queue.module';
 import { AuthModule } from '@modules/auth.module';
 import { AuditLogModule } from '@modules/audit-log.module';
 import { UserModule } from '@modules/user.module';
+import { RoleModule } from '@modules/role.module';
+import { PermissionModule } from '@modules/permission.module';
 
 @Module({
   imports: [
@@ -14,6 +16,8 @@ import { UserModule } from '@modules/user.module';
     AuthModule,
     AuditLogModule,
     UserModule,
+    RoleModule,
+    PermissionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

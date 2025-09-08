@@ -23,6 +23,8 @@
         "src/modules/user/services/*",
         "src/modules/auth/services/*",
         "src/modules/audit-log/services/*",
+        "src/modules/role/services/*",
+        "src/modules/permission/services/*",
         "src/modules/common/circuit-breaker/services/*",
         "src/modules/common/upload/services/*"
       ],
@@ -30,11 +32,15 @@
         "src/modules/user/controllers/requests/*",
         "src/modules/auth/controllers/requests/*",
         "src/modules/audit-log/controllers/requests/*",
+        "src/modules/role/controllers/requests/*",
+        "src/modules/permission/controllers/requests/*"
       ],
       "@viewmodels/*": [
         "src/modules/user/controllers/viewmodels/*",
         "src/modules/auth/controllers/viewmodels/*",
         "src/modules/audit-log/controllers/viewmodels/*",
+        "src/modules/role/controllers/viewmodels/*",
+        "src/modules/permission/controllers/viewmodels/*"
       ],
       "@modules/*": [
         "src/modules/prisma/*",
@@ -43,11 +49,11 @@
         "src/modules/common/circuit-breaker/*",
         "src/modules/common/upload/*",
         "src/modules/audit-log/*",
-        "src/modules/config/queue/*",
+        "src/modules/role/*",
+        "src/modules/permission/*",
+        "src/modules/config/queue/*"
       ],
-      "@utils/*": [
-        "src/utils/*",
-      ]
+      "@utils/*": ["src/utils/*"]
     }
   }
 }
