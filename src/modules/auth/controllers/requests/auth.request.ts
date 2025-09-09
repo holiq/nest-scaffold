@@ -27,3 +27,9 @@ export class AuthRegisterRequest {
   @IsNotEmpty()
   password: string;
 }
+
+export class RefreshTokenRequest {
+  @IsString()
+  @IsNotEmpty()
+  refreshToken: string;
+}

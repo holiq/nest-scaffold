@@ -16,6 +16,10 @@ export class AuthJwtStrategy extends PassportStrategy(Strategy, 'auth') {
   }
 
   async validate(payload: IAuthLogin) {
+    if (!payload.userLoginId || !payload.userEmail) {
+      throw new UnauthorizedException('Invalid token payload');
+    }
+
     const user = await this.prisma.user.findFirst({
       where: { id: payload.userLoginId, email: payload.userEmail },
       include: {
@@ -27,7 +31,9 @@ export class AuthJwtStrategy extends PassportStrategy(Strategy, 'auth') {
       },
       ...{ ignoreParanoids: ['pivotUserRole'] },
     });
-    if (!user) throw new UnauthorizedException();
+
+    if (!user)
+      throw new UnauthorizedException('User not found or access denied');
 
     return user;
   }

@@ -2,10 +2,16 @@ import { Expose } from 'class-transformer';
 
 export class AuthLoginVm {
   @Expose()
-  token: string;
+  accessToken: string;
+
+  @Expose()
+  refreshToken: string;
 
   @Expose()
   expiresIn: number;
+
+  @Expose()
+  refreshExpiresIn: number;
 }
 
 export class AuthRegisterVm {
@@ -17,4 +23,18 @@ export class AuthRegisterVm {
 
   @Expose()
   email: string;
+}
+
+export class RefreshTokenVm {
+  @Expose()
+  accessToken: string;
+
+  @Expose()
+  refreshToken: string;
+
+  @Expose()
+  expiresIn: number;
+
+  @Expose()
+  refreshExpiresIn: number;
 }
