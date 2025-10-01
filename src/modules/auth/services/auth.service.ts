@@ -100,7 +100,7 @@ export class AuthService {
     );
     if (!isValidHash) {
       await this.logoutAll(refreshTokenRecord.userId);
-      throw new UnauthorizedException('Invalid refresh token');
+      throw new UnauthorizedException('Invalid or expired refresh token');
     }
 
     await this.revokeToken(refreshTokenRecord.id);
