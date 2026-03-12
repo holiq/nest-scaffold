@@ -28,17 +28,8 @@ export class RoleVm {
           displayName: rolePermission.permission?.displayName,
         }),
       );
-    } else if (obj.permissions && obj.permissions.length) {
-      return obj.permissions.map(
-        (permission: { id: string; name: string; displayName: string }) => ({
-          id: permission.id,
-          name: permission.name,
-          displayName: permission.displayName,
-        }),
-      );
-    } else {
-      return [];
     }
+    return [];
   })
   permissions: Array<{
     id: string;

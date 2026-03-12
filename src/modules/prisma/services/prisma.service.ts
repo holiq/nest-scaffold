@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaPg } from '@prisma/adapter-pg';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { BaseFilter } from '@utils/base-class/base-filter';
 import * as fs from 'fs-extra';
 
 const extendedPrismaClient = () => {
-  const prisma = new PrismaClient();
+  const adapter = new PrismaPg({
+    connectionString: process.env.DATABASE_URL || '',
+  });
+  const prisma = new PrismaClient({ adapter });
 
   const applyDeletedAtToIncludes = (
     args: any,
@@ -56,8 +60,12 @@ const extendedPrismaClient = () => {
     }
   };
 
+  const deletedAtCache = new Map<string, boolean>();
+
   const hasDeletedAtColumn = (model: string): boolean => {
-    // Read the schema file
+    if (deletedAtCache.has(model)) return deletedAtCache.get(model);
+
+    // Read the schema file once and cache per model
     const schema = fs.readFileSync(
       process.cwd() + '/prisma/schema.prisma',
       'utf-8',
@@ -67,15 +75,17 @@ const extendedPrismaClient = () => {
     const modelRegex = new RegExp(`model\\s+${model}\\s+{([\\s\\S]*?)}`, 'g');
     const match = modelRegex.exec(schema);
 
+    let result = false;
     if (match) {
       const modelContent = match[1]; // Extract the content of the model block
 
       // Check if the model has a `deletedAt` field
       const deletedAtRegex = /deletedAt\s+DateTime\??.*@map\("deleted_at"\)/;
-      return deletedAtRegex.test(modelContent);
+      result = deletedAtRegex.test(modelContent);
     }
 
-    return false; // Model not found or no `deletedAt` column
+    deletedAtCache.set(model, result);
+    return result;
   };
 
   const argsIgnoreParanoids = (args: any): string[] => {

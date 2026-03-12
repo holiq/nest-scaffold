@@ -10,6 +10,7 @@ import { Prisma } from '@prisma/client';
 import { AuditLogService } from '@services/audit-log.service';
 import { SearchAuditLogRequest } from '@requests/audit-log.request';
 import { AuditLogVm } from '@viewmodels/audit-log.viewmodel';
+import { Permission } from '@utils/decorators/permission.decorator';
 
 @ApiTags('(AuditLog) Audit Logs')
 @AuthenticatedUser()
@@ -20,6 +21,7 @@ export class AuditLogController {
   @ApiOperation({ summary: 'Get all audit logs' })
   @SerializeResponse({ vm: AuditLogVm, type: 'pagination', hasMessage: true })
   @AuthenticatedAdmin()
+  @Permission(['audit.view'])
   @Get()
   async findAll(
     @PrismaFilter() filter: Prisma.AuditLogFindManyArgs,

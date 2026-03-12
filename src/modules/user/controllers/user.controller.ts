@@ -11,6 +11,7 @@ import {
 } from '@utils/decorators/authenticate-user.decorator';
 import { PrismaFilter } from '@utils/decorators/base-filter.decorator';
 import { FilterSearchUser } from '@requests/user.request';
+import { Permission } from '@utils/decorators/permission.decorator';
 
 @ApiTags('(User) User')
 @AuthenticatedUser()
@@ -21,6 +22,7 @@ export class UserController {
   @ApiOperation({ summary: 'Get all users' })
   @SerializeResponse({ vm: UserVm, type: 'pagination', hasMessage: true })
   @AuthenticatedAdmin()
+  @Permission(['users.view'])
   @Get()
   async findAll(
     @PrismaFilter() filter: Prisma.UserFindManyArgs,
