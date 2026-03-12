@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from '@services/auth.service';
 import {
@@ -15,6 +15,7 @@ import { SerializeResponse } from '@utils/decorators/response/serialize-response
 import { AuthenticatedUser } from '@utils/decorators/authenticate-user.decorator';
 import { UserAccess } from '@utils/decorators/user-access.decorator';
 import { User } from '@prisma/client';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -23,6 +24,7 @@ export class AuthController {
 
   @ApiOperation({ summary: 'Login' })
   @SerializeResponse({ vm: AuthLoginVm })
+  @UseGuards(ThrottlerGuard)
   @Post('login')
   async login(@Body() body: AuthLoginRequest) {
     return await this.service.login(body);
@@ -30,6 +32,7 @@ export class AuthController {
 
   @ApiOperation({ summary: 'Register' })
   @SerializeResponse({ vm: AuthRegisterVm })
+  @UseGuards(ThrottlerGuard)
   @Post('register')
   async register(@Body() body: AuthRegisterRequest) {
     return await this.service.register(body);
@@ -37,6 +40,7 @@ export class AuthController {
 
   @ApiOperation({ summary: 'Refresh Access Token' })
   @SerializeResponse({ vm: RefreshTokenVm })
+  @UseGuards(ThrottlerGuard)
   @Post('refresh')
   async refresh(@Body() body: RefreshTokenRequest) {
     return await this.service.refreshToken(body);

@@ -34,7 +34,7 @@ export class PermissionController {
   @ApiOperation({ summary: 'Create a new permission' })
   @SerializeResponse({ vm: PermissionVm, hasMessage: true })
   @AuthenticatedAdmin()
-  @Permission(['create_permissions'])
+  @Permission(['permissions.create'])
   @Post()
   async create(@Body() createPermissionRequest: CreatePermissionRequest) {
     return this.permissionService.create(createPermissionRequest);
@@ -43,7 +43,7 @@ export class PermissionController {
   @ApiOperation({ summary: 'Get all permissions' })
   @SerializeResponse({ vm: PermissionVm, type: 'pagination', hasMessage: true })
   @AuthenticatedAdmin()
-  @Permission(['read_permissions'])
+  @Permission(['permissions.view'])
   @Get()
   async findAll(
     @PrismaFilter() filter: Prisma.PermissionFindManyArgs,
@@ -55,7 +55,7 @@ export class PermissionController {
   @ApiOperation({ summary: 'Get a permission by ID' })
   @SerializeResponse({ vm: PermissionVm })
   @AuthenticatedAdmin()
-  @Permission(['read_permissions'])
+  @Permission(['permissions.view'])
   @ApiParam({ name: 'id', type: 'string' })
   @Get(':id')
   async findOne(@Param('id') id: string) {
@@ -65,7 +65,7 @@ export class PermissionController {
   @ApiOperation({ summary: 'Update a permission' })
   @SerializeResponse({ vm: PermissionVm, hasMessage: true })
   @AuthenticatedAdmin()
-  @Permission(['update_permissions'])
+  @Permission(['permissions.update'])
   @ApiParam({ name: 'id', type: 'string' })
   @Patch(':id')
   async update(
@@ -78,7 +78,7 @@ export class PermissionController {
   @ApiOperation({ summary: 'Delete a permission' })
   @SerializeResponse({ vm: PermissionVm, hasMessage: true })
   @AuthenticatedAdmin()
-  @Permission(['delete_permissions'])
+  @Permission(['permissions.delete'])
   @ApiParam({ name: 'id', type: 'string' })
   @Delete(':id')
   async remove(@Param('id') id: string) {

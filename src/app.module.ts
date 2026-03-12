@@ -8,10 +8,13 @@ import { AuditLogModule } from '@modules/audit-log.module';
 import { UserModule } from '@modules/user.module';
 import { RoleModule } from '@modules/role.module';
 import { PermissionModule } from '@modules/permission.module';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { validateEnvironment } from '@utils/config/validation.env';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({ validate: validateEnvironment }),
+    ThrottlerModule.forRoot({ throttlers: [{ ttl: 60000, limit: 10 }] }),
     QueueModule,
     AuthModule,
     AuditLogModule,

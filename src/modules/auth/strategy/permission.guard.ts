@@ -5,34 +5,50 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Observable } from 'rxjs';
+import { PrismaService } from '@services/prisma.service';
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
+  constructor(
+    private reflector: Reflector,
+    private readonly prisma: PrismaService,
+  ) {}
 
-  canActivate(
-    context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const getPermissions = this.reflector.get<string[]>(
       'permissions',
       context.getHandler(),
     );
 
+    if (!getPermissions || getPermissions.length === 0) {
+      return true;
+    }
+
     const request = context.switchToHttp().getRequest();
-    const { roles } = request.user;
-    const [mapPermissions]: string[] = roles.map((role) => {
-      console.log(role.get('permissions'));
-      return role
-        .get('permissions')
-        .map((permission) => permission.get('name'));
+    const { id } = request.user;
+
+    const userRolePermissions = await this.prisma.pivotRolePermission.findMany({
+      where: {
+        role: {
+          pivotUserRole: {
+            some: { userId: id },
+          },
+        },
+      },
+      include: {
+        permission: true,
+      },
     });
 
-    const some = getPermissions.some((permission) =>
-      mapPermissions.includes(permission),
+    const allPermissions = userRolePermissions
+      .map((rp) => rp.permission?.name)
+      .filter(Boolean);
+
+    const hasPermission = getPermissions.some((p) =>
+      allPermissions.includes(p),
     );
 
-    if (!mapPermissions || !some) {
+    if (!hasPermission) {
       throw new UnauthorizedException(
         'User does not have the right permissions',
       );

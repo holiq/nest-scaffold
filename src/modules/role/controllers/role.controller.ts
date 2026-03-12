@@ -34,7 +34,7 @@ export class RoleController {
   @ApiOperation({ summary: 'Create a new role' })
   @SerializeResponse({ vm: RoleVm, hasMessage: true })
   @AuthenticatedAdmin()
-  @Permission(['create_roles'])
+  @Permission(['roles.create'])
   @Post()
   async create(@Body() createRoleRequest: CreateRoleRequest) {
     return this.roleService.create(createRoleRequest);
@@ -43,7 +43,7 @@ export class RoleController {
   @ApiOperation({ summary: 'Get all roles' })
   @SerializeResponse({ vm: RoleVm, type: 'pagination', hasMessage: true })
   @AuthenticatedAdmin()
-  @Permission(['read_roles'])
+  @Permission(['roles.view'])
   @Get()
   async findAll(
     @PrismaFilter() filter: Prisma.RoleFindManyArgs,
@@ -55,7 +55,7 @@ export class RoleController {
   @ApiOperation({ summary: 'Get a role by ID' })
   @SerializeResponse({ vm: RoleVm })
   @AuthenticatedAdmin()
-  @Permission(['read_roles'])
+  @Permission(['roles.view'])
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return this.roleService.findOne(id);
@@ -64,7 +64,7 @@ export class RoleController {
   @ApiOperation({ summary: 'Update a role' })
   @SerializeResponse({ vm: RoleVm, hasMessage: true })
   @AuthenticatedAdmin()
-  @Permission(['update_roles'])
+  @Permission(['roles.update'])
   @Patch(':id')
   async update(
     @Param('id') id: string,
@@ -76,7 +76,7 @@ export class RoleController {
   @ApiOperation({ summary: 'Delete a role' })
   @SerializeResponse({ vm: RoleVm, hasMessage: true })
   @AuthenticatedAdmin()
-  @Permission(['delete_roles'])
+  @Permission(['roles.delete'])
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return this.roleService.remove(id);
