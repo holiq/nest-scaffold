@@ -30,7 +30,6 @@ export class RoleService {
     return this.prisma.role.findUniqueOrThrow({
       where: { id },
       include: {
-        permissions: true,
         pivotRolePermission: {
           include: {
             permission: true,
@@ -54,7 +53,6 @@ export class RoleService {
         }),
       },
       include: {
-        permissions: true,
         pivotRolePermission: {
           include: {
             permission: true,
@@ -80,7 +78,6 @@ export class RoleService {
         }),
       },
       include: {
-        permissions: true,
         pivotRolePermission: {
           include: {
             permission: true,

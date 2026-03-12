@@ -1,9 +1,7 @@
 import { PivotUserRole, PrismaClient, Role, User } from '@prisma/client';
 import { RoleEnum } from '../../src/modules/auth/interfaces/role.interface';
 
-const prisma = new PrismaClient();
-
-export async function seedUser(): Promise<void> {
+export async function seedUser(prisma: PrismaClient): Promise<void> {
   type UserSeed = User & {
     role?: RoleEnum;
   };

@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaPg } from '@prisma/adapter-pg';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { BaseFilter } from '@utils/base-class/base-filter';
 import * as fs from 'fs-extra';
 
 const extendedPrismaClient = () => {
-  const prisma = new PrismaClient();
+  const adapter = new PrismaPg({
+    connectionString: process.env.DATABASE_URL || '',
+  });
+  const prisma = new PrismaClient({ adapter });
 
   const applyDeletedAtToIncludes = (
     args: any,
